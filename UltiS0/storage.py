@@ -3,12 +3,12 @@
 import pickle
 import numpy as np
 import copy
-
+import math
 """
 #just for mature data
 pattern_repeats[pattern_index] = {
-    id_x: {fluermethod : '', fluerparameter: '', reperats: >=2},
-    id_x: {fluermethod : '', fluerparameter: '', reperats: >=2},
+    id_x: {fluermethod : '', fluerparameter: '', reperats: >=2, uprate: 70%, datas: [..]},
+    id_x: {fluermethod : '', fluerparameter: '', reperats: >=2, uprate: 60%, datas: [..]},
     }
 """
 
@@ -19,17 +19,21 @@ def Separator(data, MinBars=8, MaxBars=480, Period=15):
     """
     pattern_len = 8    
     gap=2
-    result=4
+    result_len=4
     start_index = {}
     pattern_repeats = {}
+    length = len(data[0])
+    if length < MaxBars*3/2:
+        ll = 2*length/3/MinBars
+        MaxBars = 2**int(math.log(ll, 2))*MinBars
     while pattern_len < MaxBars:
-        pattern_index = str(pattern_len)+'_'+str(gap)+'_'+str(result)
-        start_index[pattern_index] = [ii for ii in range(0, len(data)-(pattern_len+result), gap)]
+        pattern_index = str(pattern_len)+'_'+str(gap)+'_'+str(result_len)
+        start_index[pattern_index] = [ii for ii in range(0, length-(pattern_len+result_len), gap)]
         pattern_repeats[pattern_index] = 1
         if len(start_index[pattern_index])<=0:
             break
         pattern_len = pattern_len*2
-        result = int(pattern_len/2)
+        result_len = int(pattern_len/2)
         if gap <= 10:
             gap = gap + 1
         pass
@@ -40,8 +44,8 @@ def Separator(data, MinBars=8, MaxBars=480, Period=15):
     mirror_data = (maxd+mind*2) - mirror_data
     return {
         'data': copy.copy(data),
-        'mirror_data': mirror_data
-        'start_index': start_index,
+        'mirror_data': mirror_data,
+        'start_index': start_index,  
         'pattern_repeats': pattern_repeats,
         'des': str(MinBars) +'_'+str(MaxBars)+'_'+str(Period)
     }    
