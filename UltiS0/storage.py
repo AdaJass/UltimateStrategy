@@ -46,7 +46,7 @@ def Separator(data, MinBars=8, MaxBars=480, Period=15):
         'data': copy.copy(data),
         'mirror_data': mirror_data,
         'start_index': start_index,  
-        'pattern_repeats': pattern_repeats,
+        #'pattern_repeats': pattern_repeats,
         'des': str(MinBars) +'_'+str(MaxBars)+'_'+str(Period)
     }    
     pass
