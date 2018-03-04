@@ -4,13 +4,6 @@ import pickle
 import numpy as np
 import copy
 import math
-"""
-#just for mature data
-pattern_repeats[pattern_index] = {
-    id_x: {fluermethod : '', fluerparameter: '', reperats: >=2, uprate: 70%, datas: [..]},
-    id_x: {fluermethod : '', fluerparameter: '', reperats: >=2, uprate: 60%, datas: [..]},
-    }
-"""
 
 def Separator(data, MinBars=8, MaxBars=480, Period=15):
     """separate data into patterns
@@ -49,30 +42,44 @@ def Separator(data, MinBars=8, MaxBars=480, Period=15):
         #'pattern_repeats': pattern_repeats,
         'des': str(MinBars) +'_'+str(MaxBars)+'_'+str(Period)
     }    
-    pass
 
-def WriteRaw(data, des):
-    path = './raw/'+data['des']+des+'.pickle'
+def WriteRaw(data, name):
+    path = './raw/'+name+'.pickle'
     with open(path, 'wb') as f:
         pickle.dump(data, f)
 def WritePrimary(data, des):
     path = './primary/'+data['des']+des+'.pickle'
     with open(path, 'wb') as f:
         pickle.dump(data, f)
-def WriteMature(data, des):
-    path = './mature/'+data['des']+des+'.pickle'
-    with open(path, 'wb') as f:
-        pickle.dump(data, f)
+def WriteMature(mature_data, pattern_repeats):
+    mature_path = './mature/'+'mature_data'+'.pickle'
+    repeats_path = './mature/'+'pattern_repeats'+'.pickle'
+    with open(mature_path, 'wb') as f:
+        pickle.dump(mature_data, f)
+    with open(repeats_path, 'wb') as f:
+        pickle.dump(pattern_repeats, f)
 
-def loadData(dirName):
-    """return [{the pickle}, ...]
-    """
+def loadRawData():
     import os
-    datas=[]
-    for name in os.listdir(dirName):         
+    datas={}
+    dirName = './raw'
+    for name in os.listdir():         
         with open(os.path.join(dirName, name), 'rb') as f:
-            datas.append(pickle.load(f))
+            datas[name] = pickle.load(f)
     return datas
+
+def loadPrimaryData():
+    with open('./primary/primary_data.pickle', 'rb') as f:
+        return pickle.load(f)
+
+def loadMatureData():
+    with open('./mature/mature_data.pickle','rb') as f:
+        mature_data = pickle.load(f)
+        with open('./mature/pattern_repeats.pickle','rb') as ff:
+            pattern_repeats = pickle.load(ff)
+            return mature_data, pattern_repeats
+    
+
 
 def main():
     import random

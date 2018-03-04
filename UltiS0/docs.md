@@ -1,5 +1,5 @@
-##Data Structure Definition:
-
+## Data Structure Definition:
+```
 raw_data=
 {
 'code_period_ramdomStr': [data]
@@ -39,3 +39,4 @@ pattern_repeats=
         }
     ]
 }
+```
